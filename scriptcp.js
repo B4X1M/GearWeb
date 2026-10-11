@@ -19,11 +19,13 @@ function updateNavigation() {
   indicator.querySelector(".number").textContent = `0${currentIndex + 1}`;
 }
 
-// Botões "Saiba Mais": o evento é adicionado UMA vez só
-// (antes era adicionado a cada troca de slide e os alertas se acumulavam)
+// Botões "Saiba Mais": abre o link do carro em uma nova aba
 items.forEach((item) => {
-  item.querySelector(".information").addEventListener("click", () => {
-    alert("Mais informações sobre o carro: " + item.querySelector("h2").textContent.trim());
+  item.querySelector(".information").addEventListener("click", (e) => {
+    const url = e.currentTarget.dataset.url;
+    if (url) {
+      window.open(url, "_blank", "noopener");
+    }
   });
 });
 
@@ -39,16 +41,24 @@ prevButton.onclick = () => {
 
 // Deslizar com o dedo no celular
 let touchStartX = 0;
-container.addEventListener("touchstart", (e) => {
-  touchStartX = e.changedTouches[0].screenX;
-}, { passive: true });
+container.addEventListener(
+  "touchstart",
+  (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  },
+  { passive: true },
+);
 
-container.addEventListener("touchend", (e) => {
-  const diff = e.changedTouches[0].screenX - touchStartX;
-  if (Math.abs(diff) > 50) {
-    (diff < 0 ? nextButton : prevButton).click();
-  }
-}, { passive: true });
+container.addEventListener(
+  "touchend",
+  (e) => {
+    const diff = e.changedTouches[0].screenX - touchStartX;
+    if (Math.abs(diff) > 50) {
+      (diff < 0 ? nextButton : prevButton).click();
+    }
+  },
+  { passive: true },
+);
 
 // Menu hambúrguer (mobile)
 const menuToggle = document.getElementById("menu-toggle");
@@ -65,7 +75,7 @@ menu.querySelectorAll("li").forEach((li) =>
     menu.classList.remove("open");
     menuToggle.classList.remove("open");
     menuToggle.setAttribute("aria-expanded", false);
-  })
+  }),
 );
 
 updateNavigation();
